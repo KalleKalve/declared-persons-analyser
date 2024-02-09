@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "declared-persons-analyser": {
+      "commandName": "Project",
+      "commandLineArgs": "-district 516 -year 2019 -limit 10 -group ym -out res.json"
+    }
+  }
+}
