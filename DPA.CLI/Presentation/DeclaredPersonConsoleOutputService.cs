@@ -1,5 +1,6 @@
 ﻿using DPA.Application.Interfaces;
 using DPA.Application.Models.DeclaredPerson;
+using System.Text;
 
 namespace declared_persons_analyser.Presentation
 {
@@ -7,7 +8,9 @@ namespace declared_persons_analyser.Presentation
     {
         public void PrintOutDeclaredPersonInConsole(DeclaredPersonOutput output)
         {
-            var paddings = new Paddings(output.Data);
+            Console.OutputEncoding = Encoding.UTF8;
+
+            var tablePaddings = new Paddings(output.Data);
 
             bool includeYear = output.Data.Any(d => d.Year.HasValue);
             bool includeMonth = output.Data.Any(d => d.Month.HasValue);
@@ -21,23 +24,23 @@ namespace declared_persons_analyser.Presentation
             int changePadding = Math.Max("Change".Length, output.Data.Max(d => d.Change.ToString().Length)) + 2;
 
 
-            PrintHeader(paddings, includeYear, includeMonth, includeDay);
+            PrintHeader(tablePaddings, includeYear, includeMonth, includeDay);
 
             foreach (var item in output.Data)
             {
-                PrintDataItem(item, paddings, includeYear, includeMonth, includeDay);
+                PrintDataItem(item, tablePaddings, includeYear, includeMonth, includeDay);
             }
 
             Console.WriteLine();
 
-            PrintSummaryItem("Max:", output.Summary.Max.ToString());
-            PrintSummaryItem("Min:", output.Summary.Min.ToString());
-            PrintSummaryItem("Average:", output.Summary.Average.ToString());
+            PrintSummaryItem("Max:", output.Summary.Max.ToString(), 14);
+            PrintSummaryItem("Min:", output.Summary.Min.ToString(), 14);
+            PrintSummaryItem("Average:", output.Summary.Average.ToString(), 14);
 
             Console.WriteLine();
 
-            PrintSummaryItem("Max drop:", $"{output.Summary.MaxDrop.Value} {output.Summary.MaxDrop.Group}");
-            PrintSummaryItem("Max increase:", $"{output.Summary.MaxIncrease.Value} {output.Summary.MaxIncrease.Group}");
+            PrintSummaryItem("Max drop:", $"{output.Summary.MaxDrop.Value} {output.Summary.MaxDrop.Group}", 24);
+            PrintSummaryItem("Max increase:", $"{output.Summary.MaxIncrease.Value} {output.Summary.MaxIncrease.Group}", 24);
 
             Console.WriteLine();
         }
@@ -62,9 +65,9 @@ namespace declared_persons_analyser.Presentation
             Console.WriteLine(item.Change.ToString().PadRight(paddings.Change));
         }
 
-        private void PrintSummaryItem(string name, string value)
+        private void PrintSummaryItem(string name, string value, int summaryPadding)
         {
-            Console.WriteLine($"{name.PadRight(12)} {value}");
+            Console.WriteLine($"{name.PadRight(summaryPadding)} {value}");
         }
     }
 

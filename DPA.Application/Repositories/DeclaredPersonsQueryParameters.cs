@@ -1,4 +1,6 @@
-﻿namespace DPA.Domain.Repositories
+﻿using DPA.Shared.Enums;
+
+namespace DPA.Domain.Repositories
 {
     public class DeclaredPersonsQueryParameters
     {
@@ -7,6 +9,6 @@
         public int? Month { get; set; }
         public int? Day { get; set; }
         public int Limit { get; set; }
-        public string? Group { get; set; }
+        public GroupedBy Group { get; set; }
     }
 }

@@ -13,9 +13,9 @@ namespace DPA.Infrastructure.Data.ODataClients
             _client = new ODataClient(settings);
         }
 
-        public async Task<IEnumerable<DeclaredPerson>> GetDeclaredPersonsAsync(DeclaredPersonsODataQueryParameters parameters)
+        public async Task<IEnumerable<DeclaredPersons>> GetDeclaredPersonsAsync(DeclaredPersonsODataQueryParameters parameters)
         {
-            var command = _client.For<DeclaredPerson>("DeclaredPersons");            
+            var command = _client.For<DeclaredPersons>("DeclaredPersons");
 
             if (!string.IsNullOrWhiteSpace(parameters.Select))
             {
@@ -27,26 +27,19 @@ namespace DPA.Infrastructure.Data.ODataClients
                 command = command.Filter(parameters.Filter);
             }
 
-            if (parameters.Top != null)
+            if (parameters.Top.HasValue)
             {
                 command = command.Top(parameters.Top.Value);
             }
 
-            if (parameters.Skip != null)
+            if (parameters.Skip.HasValue)
             {
                 command = command.Skip(parameters.Skip.Value);
             }
 
-            if (!string.IsNullOrWhiteSpace(parameters.Orderby))
+            if (parameters.Orderby != null)
             {
-                if(parameters.OrderByDesc)
-                {
-                    command = command.OrderByDescending(parameters.Orderby);
-                }
-                else
-                {
-                    command = command.OrderBy(parameters.Orderby);
-                }                
+                command = command.OrderBy(parameters.Orderby);
             }
 
             var result =  await command.FindEntriesAsync();

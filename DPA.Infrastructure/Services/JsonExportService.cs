@@ -1,4 +1,5 @@
 ﻿using DPA.Application.Interfaces;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,8 @@ namespace DPA.Infrastructure.Services
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
 
             using (var stream = File.Create(filePath))

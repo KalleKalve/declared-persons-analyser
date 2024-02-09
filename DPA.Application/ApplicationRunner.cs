@@ -1,8 +1,9 @@
 ﻿using DPA.Application.Configuration;
 using DPA.Application.Interfaces;
-using DPA.Application.Models.DeclaredPerson;
 using DPA.Application.Repositories;
+using DPA.Application.Services;
 using DPA.Domain.Repositories;
+using DPA.Shared.Utilities;
 
 namespace DPA.Application
 {
@@ -12,56 +13,39 @@ namespace DPA.Application
         private readonly IJsonExportService _jsonExportService;
         private readonly IDeclaredPersonConsoleOutputService _consoleOutputService;
         private readonly IDeclaredPersonsRepository _declaredPersonsRepository;
+        private readonly IDeclaredPersonsProcessor _declaredPersonsProcessor;
 
         public ApplicationRunner(
-            ApplicationRunnerOptions options, 
-            IJsonExportService jsonExportService, 
-            IDeclaredPersonConsoleOutputService consoleOutputService, 
-            IDeclaredPersonsRepository declaredPersonsRepository)
+            ApplicationRunnerOptions options,
+            IJsonExportService jsonExportService,
+            IDeclaredPersonConsoleOutputService consoleOutputService,
+            IDeclaredPersonsRepository declaredPersonsRepository,
+            IDeclaredPersonsProcessor declaredPersonsProcessor)
         {
             _options = options;
             _jsonExportService = jsonExportService;
             _consoleOutputService = consoleOutputService;
             _declaredPersonsRepository = declaredPersonsRepository;
+            _declaredPersonsProcessor = declaredPersonsProcessor;
         }
 
         public async Task RunAsync()
         {
-            // Application logic here
-
             var queryParameters = new DeclaredPersonsQueryParameters
             {
                 DistrictId = _options.DistrictId,
                 Year = _options.Year,
                 Month = _options.Month,
                 Day = _options.Day,
-                    
+                Group = GroupedByExtensions.MapStringToEnum(_options.Group),
                 Limit = _options.Limit
             };
 
-            var data = _declaredPersonsRepository.GetDeclaredPersonsAsync(queryParameters);
+            var data = await _declaredPersonsRepository.GetDeclaredPersonsAsync(queryParameters);
 
-
-
-            var declaredPersons = new DeclaredPersonOutput
-            {
-                Data = new List<DeclaredPersonData>
-            {
-                new DeclaredPersonData { DistrictName = "District 1234234234234234", Year = 2021, Month = 12, Value = 100000000, Change = 5 },
-                // Add more data items...
-            },
-                Summary = new DeclaredPersonSummary
-                {
-                    Max = 2003434,
-                    Min = 50234234,
-                    Average = 1253434,
-                    MaxDrop = new DeclaredPersonMaxDrop { Value = -200000, Group = "2021.12" },
-                    MaxIncrease = new DeclaredPersonMaxIncrease { Value = 30345345, Group = "2021.11" }
-                }
-            };
+            var declaredPersons = _declaredPersonsProcessor.ProcessDeclaredPersons(data, queryParameters.Group);
 
             _consoleOutputService.PrintOutDeclaredPersonInConsole(declaredPersons);
-
 
             if (!string.IsNullOrWhiteSpace(_options.OutputFileName))
             {
@@ -70,5 +54,6 @@ namespace DPA.Application
                     .ConfigureAwait(false);
             }
         }
+
     }
 }

@@ -5,6 +5,6 @@ namespace DPA.Application.Repositories
 {
     public interface IDeclaredPersonsRepository
     {
-        Task<IEnumerable<DeclaredPerson>> GetDeclaredPersonsAsync(DeclaredPersonsQueryParameters parameters);
+        Task<IEnumerable<DeclaredPersons>> GetDeclaredPersonsAsync(DeclaredPersonsQueryParameters parameters);
     }
 }
