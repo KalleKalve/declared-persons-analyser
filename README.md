@@ -34,7 +34,7 @@ If you're running the `DPA.CLI` executable directly from the command line (outsi
 - **`-source`**:  
   The service URL to fetch data from.  
   **Usage**: `-source <URL>`  
-  **Example**: `-source https://www.example.com/odata/service`
+  **Example**: `-source https://www.testenvironmentexample.com/odata/service`
 
 - **`-district`**:  
   The district Id for which data is to be analyzed. This is required.
