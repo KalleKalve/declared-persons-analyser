@@ -18,8 +18,6 @@ In Solution Explorer, right-click on `DPA.CLI` and select **Set as Startup Proje
 ### **2. Run**
 Press **F5** or click the **Start** button to run `DPA.CLI` with the specified input parameters.
 
-`DPA.CLI` is now your default startup project, configured to run with your desired input parameters during debugging.
-
 
 ## **Running `declared-persons-analyser.exe` from the Command Line**
 
