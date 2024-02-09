@@ -1,6 +1,8 @@
 ﻿using DPA.Application.Configuration;
 using DPA.Application.Interfaces;
 using DPA.Application.Models.DeclaredPerson;
+using DPA.Application.Repositories;
+using DPA.Domain.Repositories;
 
 namespace DPA.Application
 {
@@ -9,18 +11,36 @@ namespace DPA.Application
         private readonly ApplicationRunnerOptions _options;
         private readonly IJsonExportService _jsonExportService;
         private readonly IDeclaredPersonConsoleOutputService _consoleOutputService;
-        //private readonly 
+        private readonly IDeclaredPersonsRepository _declaredPersonsRepository;
 
-        public ApplicationRunner(ApplicationRunnerOptions options, IJsonExportService jsonExportService, IDeclaredPersonConsoleOutputService consoleOutputService)
+        public ApplicationRunner(
+            ApplicationRunnerOptions options, 
+            IJsonExportService jsonExportService, 
+            IDeclaredPersonConsoleOutputService consoleOutputService, 
+            IDeclaredPersonsRepository declaredPersonsRepository)
         {
             _options = options;
             _jsonExportService = jsonExportService;
             _consoleOutputService = consoleOutputService;
+            _declaredPersonsRepository = declaredPersonsRepository;
         }
 
         public async Task RunAsync()
         {
             // Application logic here
+
+            var queryParameters = new DeclaredPersonsQueryParameters
+            {
+                DistrictId = _options.DistrictId,
+                Year = _options.Year,
+                Month = _options.Month,
+                Day = _options.Day,
+                    
+                Limit = _options.Limit
+            };
+
+            var data = _declaredPersonsRepository.GetDeclaredPersonsAsync(queryParameters);
+
 
 
             var declaredPersons = new DeclaredPersonOutput

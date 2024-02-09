@@ -2,10 +2,11 @@
 {
     public class DeclaredPersonsQueryParameters
     {
-        public int Top { get; set; } = 10;
-        public int Skip { get; set; } = 0;
-        public string Filter { get; set; }
-        public string Select { get; set; }
-        public string Orderby { get; set; }
+        public int? DistrictId { get; set; }
+        public int? Year { get; set; }
+        public int? Month { get; set; }
+        public int? Day { get; set; }
+        public int Limit { get; set; }
+        public string? Group { get; set; }
     }
 }
