@@ -13,6 +13,11 @@ namespace DPA.Application.Services
 
         public DeclaredPersonOutput ProcessDeclaredPersons(IEnumerable<DeclaredPersons> data, GroupedBy groupedBy)
         {
+            if(data == null || !data.Any())
+            {
+                return new DeclaredPersonOutput();
+            }
+
             var declaredPersons = new DeclaredPersonOutput();
             var maxDrop = new DeclaredPersonMaxDrop();
             var MaxIncrease = new DeclaredPersonMaxIncrease();

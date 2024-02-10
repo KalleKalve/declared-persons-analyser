@@ -68,6 +68,7 @@ internal class Program
                 services.AddSingleton<IJsonExportService, JsonExportService>();
                 services.AddSingleton<IDeclaredPersonConsoleOutputService, DeclaredPersonConsoleOutputService>();
                 services.AddTransient<IDeclaredPersonsProcessor, DeclaredPersonsProcessor>();
+
             });
     }
 
