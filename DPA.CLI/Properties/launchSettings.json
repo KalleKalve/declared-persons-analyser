@@ -2,7 +2,7 @@
   "profiles": {
     "declared-persons-analyser": {
       "commandName": "Project",
-      "commandLineArgs": "-district 516 -year 2015 -day 5 -out res.jsod"
+      "commandLineArgs": "-district 516 -year 2019 -limit 4 -group ym -out res.json"
     }
   }
 }

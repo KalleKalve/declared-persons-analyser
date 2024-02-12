@@ -11,12 +11,12 @@ namespace DPA.Application.Services
         {            
         }
 
-        public DeclaredPersonOutput ProcessDeclaredPersons(IEnumerable<DeclaredPersons> data, GroupedBy groupedBy)
+        public DeclaredPersonOutput ProcessDeclaredPersons(IEnumerable<DeclaredPersons> data, GroupedBy groupedBy, int limit)
         {
             if(data == null || !data.Any())
             {
                 return new DeclaredPersonOutput();
-            }
+            }            
 
             var declaredPersons = new DeclaredPersonOutput();
             var maxDrop = new DeclaredPersonMaxDrop();
@@ -33,10 +33,10 @@ namespace DPA.Application.Services
                 valueSum = valueSum + entry.value;
                 max = max > entry.value ? max : entry.value;
                 min = min < entry.value ? min : entry.value;
-                change = previousValue - entry.value;
+                change = entry.value - previousValue;
                 entryCount++;
 
-                if (entryCount == 1) // for first iteration only
+                if (entryCount == 1) // for the first iteration only
                 {
                     max = entry.value;
                     min = entry.value;
@@ -59,7 +59,7 @@ namespace DPA.Application.Services
                 previousValue = entry.value;
             }
 
-            double average = (valueSum / entryCount);
+            double average = (double)valueSum / entryCount;
 
             declaredPersons.Summary = new DeclaredPersonSummary
             {

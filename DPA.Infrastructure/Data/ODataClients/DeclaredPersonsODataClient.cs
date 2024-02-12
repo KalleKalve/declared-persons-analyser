@@ -42,7 +42,17 @@ namespace DPA.Infrastructure.Data.ODataClients
                 command = command.OrderBy(parameters.Orderby);
             }
 
-            var result =  await command.FindEntriesAsync();
+            var annotations = new ODataFeedAnnotations();
+            var result = new List<DeclaredPersons>();
+
+            var entries = await command.FindEntriesAsync(annotations);
+            result.AddRange(entries);
+
+            while (annotations.NextPageLink != null)
+            {
+                var nextPage = await _client.For<DeclaredPersons>("DeclaredPersons").FindEntriesAsync(annotations.NextPageLink, annotations);
+                result.AddRange(nextPage);
+            }  
 
             return result;
         }

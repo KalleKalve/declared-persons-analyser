@@ -16,14 +16,6 @@ namespace declared_persons_analyser.Presentation
             bool includeMonth = output.Data.Any(d => d.Month.HasValue);
             bool includeDay = output.Data.Any(d => d.Day.HasValue);
 
-            int districtNamePadding = Math.Max("District Name".Length, output.Data.Max(d => d.DistrictName?.Length ?? 0)) + 2;
-            int yearPadding = "Year".Length + 2;
-            int monthPadding = "Month".Length + 2;
-            int dayPadding = "Day".Length + 2;
-            int valuePadding = Math.Max("Value".Length, output.Data.Max(d => d.Value.ToString().Length)) + 2;
-            int changePadding = Math.Max("Change".Length, output.Data.Max(d => d.Change.ToString().Length)) + 2;
-
-
             PrintHeader(tablePaddings, includeYear, includeMonth, includeDay);
 
             foreach (var item in output.Data)
@@ -39,8 +31,12 @@ namespace declared_persons_analyser.Presentation
 
             Console.WriteLine();
 
-            PrintSummaryItem("Max drop:", $"{output.Summary.MaxDrop.Value} {output.Summary.MaxDrop.Group}", 24);
-            PrintSummaryItem("Max increase:", $"{output.Summary.MaxIncrease.Value} {output.Summary.MaxIncrease.Group}", 24);
+            var valuePadding = 
+                output.Summary.MaxDrop.Value.ToString().Length > output.Summary.MaxIncrease.Value.ToString().Length 
+                ? output.Summary.MaxDrop.Value.ToString().Length : output.Summary.MaxIncrease.Value.ToString().Length;
+
+            PrintSummaryGroupItem("Max drop:", $"{output.Summary.MaxDrop.Value}", $"{output.Summary.MaxDrop.Group}", 24, valuePadding);
+            PrintSummaryGroupItem("Max increase:", $"{output.Summary.MaxIncrease.Value}", $"{output.Summary.MaxIncrease.Group}", 24, valuePadding);
 
             Console.WriteLine();
         }
@@ -65,9 +61,14 @@ namespace declared_persons_analyser.Presentation
             Console.WriteLine(item.Change.ToString().PadRight(paddings.Change));
         }
 
-        private void PrintSummaryItem(string name, string value, int summaryPadding)
+        private void PrintSummaryItem(string name, string value, int namePadding)
         {
-            Console.WriteLine($"{name.PadRight(summaryPadding)} {value}");
+            Console.WriteLine($"{name.PadRight(namePadding)} {value}");
+        }
+
+        private void PrintSummaryGroupItem(string name, string value, string group, int namePadding, int valuePadding)
+        {
+            Console.WriteLine($"{name.PadRight(namePadding)} {value.PadRight(valuePadding)} {group}");
         }
     }
 

@@ -43,7 +43,7 @@ namespace DPA.Application
 
             var data = await _declaredPersonsRepository.GetDeclaredPersonsAsync(queryParameters);
 
-            var declaredPersons = _declaredPersonsProcessor.ProcessDeclaredPersons(data, queryParameters.Group);
+            var declaredPersons = _declaredPersonsProcessor.ProcessDeclaredPersons(data, queryParameters.Group, queryParameters.Limit);
 
             _consoleOutputService.PrintOutDeclaredPersonInConsole(declaredPersons);
 

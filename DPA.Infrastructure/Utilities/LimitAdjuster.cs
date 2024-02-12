@@ -1,25 +1,40 @@
 ﻿using DPA.Domain.Repositories;
+using DPA.Shared.Enums;
 
 namespace DPA.Infrastructure.Utilities
 {
     public class LimitAdjuster
     {
-        public static int AdjustTheLimitOfReturnedEntries(int limit, DeclaredPersonsQueryParameters parameters)
+        public static int? AdjustTheLimitOfReturnedEntries(int limit, DeclaredPersonsQueryParameters parameters)
         {
-            /// Since the client seems to be V3, not v4 Odata, This is where the code for adjusting returned entries with OData Top would be.
-            /// Data aggregation and grouping seems like is not possible server side atm, so in order to get the limit working as expected, 
-            /// this method could contain code getting enough entires to later do the aggregation and full grouping client side and then 
-            /// it would be possible to return expected limit.
-            /// 
-            /// Solution in this case could be to use parameters like grouping and filter values to determine how many entries are needed 
-            /// to get required amount of data to do calculations. 
-            /// 
-            /// Example: -limit 4 - group ym, taking month first, one could calculate the minimum Top value of the Odata query to get required data.
-            /// 4 x 31(max days in month) = Top parameter value. Later apply -limit 4 to proccesed data.
-            /// 
-            /// If the Adjusted Limit becomes too high, on OData client side there could be pagination implemented to receive data in large batches, but not all at once.
+            /// Since the client seems to be V3, not v4 Odata, This is where the code for adjusting returned entry count is.
+            /// Data aggregation and grouping seems like is not possible server side atm, so in order to get the -limit command working as expected, 
+            /// this method contains code getting enough entires from the server to later do the aggregation and grouping client side and use -limit value 
+            /// against the final processed data.
 
-            return limit;
+            var maxDaysInAYear = 366;
+            var maxDaysinAMonth = 31;
+
+            if (parameters.Group == GroupedBy.Year)
+            {
+                var adjustedLimit = limit * maxDaysInAYear;
+
+                return adjustedLimit;
+            }
+            else if (parameters.Group == GroupedBy.Month)
+            {
+                return null; // no limit. Need all values for the months. See filters to limit what months.
+            }
+            else if (parameters.Group == GroupedBy.YearMonth)
+            {
+                var adjustedLimit = limit * maxDaysinAMonth;
+
+                return adjustedLimit;
+            }
+            else
+            {
+                return limit;
+            }
         }
     }
 }

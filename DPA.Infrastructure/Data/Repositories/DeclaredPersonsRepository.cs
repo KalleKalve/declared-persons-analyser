@@ -24,7 +24,11 @@ namespace DPA.Infrastructure.Data.Repositories
 
             var groupedDeclaredPersons = Group(declaredPersons, parameters.Group);
 
-            return groupedDeclaredPersons;
+            var orderedDeclaredPersons = Sort(groupedDeclaredPersons, parameters);
+
+            var limitAdjustedDeclaredPersonsData = LimitAdjusterForData.RemoveExcessDataEntries(orderedDeclaredPersons, parameters.Group, parameters.Limit);
+
+            return limitAdjustedDeclaredPersonsData;
         }
 
         private DeclaredPersonsODataQueryParameters TranslateToODataQueryParameters(DeclaredPersonsQueryParameters parameters)
@@ -32,7 +36,7 @@ namespace DPA.Infrastructure.Data.Repositories
             var translatedQueryParameters = new DeclaredPersonsODataQueryParameters();
 
             translatedQueryParameters.Filter = FilterStringBuilder
-                .BuildFilterString(parameters.DistrictId, parameters.Year, parameters.Month, parameters.Day);            
+                .BuildFilterString(parameters.DistrictId, parameters.Year, parameters.Month, parameters.Day, parameters.Group, parameters.Limit);
 
             translatedQueryParameters.Top = LimitAdjuster
                 .AdjustTheLimitOfReturnedEntries(parameters.Limit, parameters);
@@ -48,7 +52,7 @@ namespace DPA.Infrastructure.Data.Repositories
         }
 
         private IEnumerable<DeclaredPersons> Group(IEnumerable<DeclaredPersons> ungroupedDeclaredPersons, GroupedBy group)
-        {            
+        {
             if (group == GroupedBy.Year)
             {
                 var grouped = ungroupedDeclaredPersons
@@ -143,6 +147,11 @@ namespace DPA.Infrastructure.Data.Repositories
             {
                 return ungroupedDeclaredPersons;
             }
+        }
+
+        private IEnumerable<DeclaredPersons> Sort(IEnumerable<DeclaredPersons> groupedDeclaredPersons, DeclaredPersonsQueryParameters parameters)
+        {
+            return groupedDeclaredPersons.OrderBy(x => x.year).ThenBy(x => x.month).ThenBy(x => x.day); // introduce custom sorting
         }
     }
 }
