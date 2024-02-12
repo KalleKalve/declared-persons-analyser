@@ -16,6 +16,8 @@ namespace declared_persons_analyser.Presentation
             bool includeMonth = output.Data.Any(d => d.Month.HasValue);
             bool includeDay = output.Data.Any(d => d.Day.HasValue);
 
+            Console.WriteLine();
+
             PrintHeader(tablePaddings, includeYear, includeMonth, includeDay);
 
             foreach (var item in output.Data)
