@@ -27,7 +27,7 @@ namespace DPA.Infrastructure.Utilities
                 AppendAndIfNeeded(filter);
                 filter.Append($"{nameof(DeclaredPersons.month)} eq {month.Value}");
             }
-            else if (groupedBy == GroupedBy.Month) // needs all the data, so no limit from server
+            else if (groupedBy == GroupedBy.Month) // needs all the data
             {
                 if(limit < 12 && limit != 0)
                 {
@@ -49,6 +49,23 @@ namespace DPA.Infrastructure.Utilities
             {
                 AppendAndIfNeeded(filter);
                 filter.Append($"{nameof(DeclaredPersons.day)} eq {day.Value}");
+            }
+            else if (groupedBy == GroupedBy.Day) // needs all the data
+            {
+                if (limit < 31 && limit != 0)
+                {
+                    AppendAndIfNeeded(filter);
+
+                    filter.Append("(");
+
+                    for (int i = 1; i <= limit; i++)
+                    {
+                        AppendOrIfNeeded(filter, i);
+                        filter.Append($"{nameof(DeclaredPersons.day)} eq {i}");
+                    }
+
+                    filter.Append(")");
+                }
             }
 
             return filter.ToString();

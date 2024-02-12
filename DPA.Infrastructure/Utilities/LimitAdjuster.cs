@@ -25,11 +25,21 @@ namespace DPA.Infrastructure.Utilities
             {
                 return null; // no limit. Need all values for the months. See filters to limit what months.
             }
+            else if (parameters.Group == GroupedBy.Day)
+            {
+                return null; // no limit.
+            }
             else if (parameters.Group == GroupedBy.YearMonth)
             {
-                var adjustedLimit = limit * maxDaysinAMonth;
-
-                return adjustedLimit;
+                return null; // no limit.
+            }
+            else if (parameters.Group == GroupedBy.YearDay)
+            {
+                return null; // no limit.
+            }
+            else if (parameters.Group == GroupedBy.MonthDay)
+            {
+                return null; // no limit.
             }
             else
             {
