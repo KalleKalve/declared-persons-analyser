@@ -1,6 +1,7 @@
 # Quick Setup Guide
 
-## **Setting `DPA.CLI` as the Startup Project**
+## **Setting `DPA.CLI` as the Startup Project **
+This application is developed with .NET 8
 
 ### **1. Open the Solution**
 Launch Visual Studio 2022 and open the project's solution file (`.sln`).
